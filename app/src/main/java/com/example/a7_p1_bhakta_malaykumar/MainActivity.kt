@@ -76,6 +76,7 @@ class MainActivity : AppCompatActivity() {
                 tvExpression.text = "0"
                 //tvResult.text = "0"
                 tvExpression.setBackgroundColor(Color.RED)
+                tvExpression.setTextColor(Color.WHITE)
             }
             //tvChangeSign.isActivated = true
         }
@@ -101,7 +102,7 @@ class MainActivity : AppCompatActivity() {
     fun appendOnExpression(string: String, canClear: Boolean, opearation: Boolean){
 
         //Setting/resetting color of text and background
-        tvExpression.setTextColor(Color.GRAY)
+        tvExpression.setTextColor(Color.BLACK)
         tvExpression.setBackgroundColor(Color.TRANSPARENT)
 
         //if number entered instead of operator
