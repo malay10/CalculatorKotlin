@@ -11,82 +11,106 @@ import java.lang.Exception
 
 class MainActivity : AppCompatActivity() {
 
-    var decimal : Boolean = true
+    var decimal : Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        tvZero.setOnClickListener { appendOnExpression("0", canClear = true) }
-        tvOne.setOnClickListener { appendOnExpression("1",true) }
-        tvTwo.setOnClickListener { appendOnExpression("2",true) }
-        tvThree.setOnClickListener { appendOnExpression("3",true) }
-        tvFour.setOnClickListener { appendOnExpression("4",true) }
-        tvFive.setOnClickListener { appendOnExpression("5",true) }
-        tvSix.setOnClickListener { appendOnExpression("6",true) }
-        tvSeven.setOnClickListener { appendOnExpression("7",true) }
-        tvEight.setOnClickListener { appendOnExpression("8",true) }
-        tvNine.setOnClickListener { appendOnExpression("9",true) }
-        tvDecimal.setOnClickListener { appendOnExpression(".", true)  }
+        tvZero.setOnClickListener { appendOnExpression("0", canClear = true, opearation = false) }
+        tvOne.setOnClickListener { appendOnExpression("1", true, opearation = false) }
+        tvTwo.setOnClickListener { appendOnExpression("2", true, opearation = false) }
+        tvThree.setOnClickListener { appendOnExpression("3", true, opearation = false) }
+        tvFour.setOnClickListener { appendOnExpression("4", true, opearation = false) }
+        tvFive.setOnClickListener { appendOnExpression("5", true, opearation = false) }
+        tvSix.setOnClickListener { appendOnExpression("6", true, opearation = false) }
+        tvSeven.setOnClickListener { appendOnExpression("7", true, opearation = false) }
+        tvEight.setOnClickListener { appendOnExpression("8", true, opearation = false) }
+        tvNine.setOnClickListener { appendOnExpression("9", true, opearation = false) }
 
-        tvPlus.setOnClickListener { appendOnExpression("+",false) }
-        tvMinus.setOnClickListener { appendOnExpression("-",false) }
-        tvMultiply.setOnClickListener { appendOnExpression("*",false) }
-        tvDivide.setOnClickListener { appendOnExpression("/",false) }
-        tvModulas.setOnClickListener { appendOnExpression("%",false) }
-        tvParen.setOnClickListener { appendOnExpression("()",false) }
+
+        tvPlus.setOnClickListener { appendOnExpression("+", false, opearation = true) }
+        tvMinus.setOnClickListener { appendOnExpression("-", false, opearation = true) }
+        tvMultiply.setOnClickListener { appendOnExpression("*", false, opearation = true) }
+        tvDivide.setOnClickListener { appendOnExpression("/", false, opearation = true) }
+        tvModulas.setOnClickListener { appendOnExpression("%", false, opearation = true) }
+        tvParen.setOnClickListener { appendOnExpression("()", false, opearation = false) }
         tvClealear.setOnClickListener {
-            tvExpression.text= ""
+            tvExpression.text = ""
             tvResult.text = ""
-            tvExpression.setBackgroundColor(Color.WHITE)
+            tvExpression.setBackgroundColor(Color.TRANSPARENT)
             tvExpression.setTextColor(Color.GRAY)
+            decimal = false
+            print("ALL CLEAR")
         }
         //tvChangeSign.setOnClickListener { appendOnExpression(1,true) }
 
-        tvResult.setOnClickListener { try {
-            //val expression = (1+2).build()
-            val expression = ExpressionBuilder(tvExpression.text.toString()).build()
-            val result = expression.evaluate()
-            if(result < 0){
-                tvExpression.setBackgroundColor(Color.BLACK)
-                tvExpression.setTextColor(Color.WHITE)
+        tvResult.setOnClickListener {
+
+            try {
+
+                //Calculation()
+                //return
+                //val expression = (1+2).build()
+                val expression = ExpressionBuilder(tvExpression.text.toString()).build()
+                val result = expression.evaluate()
+                if (result < 0) {
+                    tvExpression.setBackgroundColor(Color.BLACK)
+                    tvExpression.setTextColor(Color.WHITE)
+                }
+                val longResult = result.toLong()
+                if (result == longResult.toDouble()) {
+                    tvExpression.text = longResult.toString()
+                } else
+                    tvExpression.text = result.toString()
+
+            } catch (e: Exception) {
+                Log.d("Exception", "message: " + e.message)
+                tvExpression.text = "0"
+                //tvResult.text = "0"
+                tvExpression.setBackgroundColor(Color.RED)
             }
-            val longResult = result.toLong()
-            if (result == longResult.toDouble()) {
-                tvExpression.text = longResult.toString()
+            tvChangeSign.isActivated = true
+        }
+
+        tvDecimal.setOnClickListener {
+            if(!decimal) {
+                appendOnExpression(".", true, opearation = false)
+                decimal = true
             }
             else
-                tvExpression.text = result.toString()
+                print("Already Decimal")
+        }
 
-        }catch (e: Exception){
-            Log.d("Exception","message: " + e.message)
-            tvExpression.text = "0"
-            //tvResult.text = "0"
-            tvExpression.setBackgroundColor(Color.RED)
-        }}
+        tvChangeSign.setOnClickListener {
+            tvExpression.text = (tvExpression.text.toString().toDouble() * -1 ).toString()
+            Log.d( "Message", (tvExpression.text.toString().toDouble() * -1).toString())
+        }
     }
 
-    fun appendOnExpression(string: String, canClear: Boolean){
+    fun appendOnExpression(string: String, canClear: Boolean, opearation: Boolean){
 
         tvExpression.setTextColor(Color.GRAY)
-        tvExpression.setBackgroundColor(Color.WHITE)
-
-        if(decimal && string == "."){
-            tvExpression.append(string)
-            Log.d("message", "decimal: " +decimal)
+        tvExpression.setBackgroundColor(Color.TRANSPARENT)
+        if (opearation){
             decimal = false
-            return
         }
+
         if ( canClear){
             tvResult.text = ""
             tvExpression.append(string)
-            tvExpression.setBackgroundColor(Color.WHITE)
+            tvExpression.setBackgroundColor(Color.TRANSPARENT)
             tvExpression.setTextColor(Color.GRAY)
         }
         else{
             tvExpression.append(tvResult.text)
             tvExpression.append(string)
-            tvResult.text = ""
         }
     }
+
+    fun calculation(){
+        print("========================================================")
+        print(tvExpression.text)
+    }
+
 }
